@@ -22,4 +22,9 @@ public class XpReward implements IReward {
 		p.sendMessage("§7["+Config.get().getPrefix()+"]§7 §aOtrzymales §6§o"+amount+" §apunktow doswiadczenia");
 	}
 
+	@Override
+	public String asString() {
+		return "  §4§l» §6§o"+amount+" xp";
+	}
+
 }

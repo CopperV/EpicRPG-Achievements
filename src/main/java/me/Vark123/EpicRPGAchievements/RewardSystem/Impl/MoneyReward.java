@@ -22,4 +22,9 @@ public class MoneyReward implements IReward {
 		p.sendMessage("§7["+Config.get().getPrefix()+"]§7 §aOtrzymales §e§o"+String.format("%.2f", amount)+"$");
 	}
 
+	@Override
+	public String asString() {
+		return "  §4§l» §e§o"+String.format("%.2f", amount)+"$";
+	}
+
 }

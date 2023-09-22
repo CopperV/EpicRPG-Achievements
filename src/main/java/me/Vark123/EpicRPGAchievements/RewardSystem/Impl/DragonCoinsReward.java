@@ -22,4 +22,9 @@ public class DragonCoinsReward implements IReward {
 		p.sendMessage("§7["+Config.get().getPrefix()+"]§7 §aOtrzymales §4§o"+amount+" §asmoczych monet");
 	}
 
+	@Override
+	public String asString() {
+		return "  §4§l» §4§o"+amount+" smoczych monet";
+	}
+
 }

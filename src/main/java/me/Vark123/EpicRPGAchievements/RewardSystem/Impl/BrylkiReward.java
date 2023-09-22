@@ -22,4 +22,9 @@ public class BrylkiReward implements IReward {
 		p.sendMessage("§7["+Config.get().getPrefix()+"]§7 §aOtrzymales §9§o"+amount+" §abrylek rudy");
 	}
 
+	@Override
+	public String asString() {
+		return "  §4§l» §9§o"+amount+" brylek rudy";
+	}
+
 }

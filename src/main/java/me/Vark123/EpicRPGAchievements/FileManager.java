@@ -1,18 +1,25 @@
 package me.Vark123.EpicRPGAchievements;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 import lombok.Getter;
 import me.Vark123.EpicRPGAchievements.AchievementSystem.Achievement;
 import me.Vark123.EpicRPGAchievements.AchievementSystem.AchievementManager;
+import me.Vark123.EpicRPGAchievements.PlayerSystem.PlayerAchievements;
 import me.Vark123.EpicRPGAchievements.RewardSystem.IReward;
 import me.Vark123.EpicRPGAchievements.RewardSystem.Impl.BrylkiReward;
 import me.Vark123.EpicRPGAchievements.RewardSystem.Impl.MoneyReward;
@@ -111,11 +118,86 @@ public final class FileManager {
 										.display(display)
 										.lore(lore)
 										.rewards(rewards)
+										.category(category)
 										.build();
 								AchievementManager.get().registerAchievement(achievement);
 							});
 					});
 			});
+		AchievementManager.get().getAchievements().sort((av1, av2) -> av1.getId().compareTo(av2.getId()));
+		AchievementManager.get().getCategories().sort((cat1, cat2) -> cat1.getId().compareTo(cat2.getId()));
+	}
+	
+	public static PlayerAchievements loadPlayerAchievements(Player p) {
+		UUID uid = p.getUniqueId();
+		File pFile = new File(playerDir, uid.toString()+".yml");
+		if(!pFile.exists()) {
+			try {
+				pFile.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return PlayerAchievements.builder()
+					.player(p)
+					.achievementsInProgress(new ConcurrentHashMap<>())
+					.completedAchievements(new LinkedList<>())
+					.build();
+		}
+		
+		YamlConfiguration fYml = YamlConfiguration.loadConfiguration(pFile);
+		Collection<String> completedAchievements = fYml.getStringList("completed-achievements");
+		Map<Achievement, Integer> achievementsInProgress = new ConcurrentHashMap<>();
+		
+		ConfigurationSection progressSection = fYml.getConfigurationSection("achievements-in-progress");
+		if(progressSection != null) {
+			progressSection.getKeys(false).stream()
+				.map(id -> AchievementManager.get().getAchievements().stream()
+						.filter(achievement -> achievement.getId().equals(id))
+						.findAny())
+				.filter(achievement -> achievement.isPresent())
+				.map(achievement -> achievement.get())
+				.forEach(achievement -> {
+					int progress = progressSection.getInt(achievement.getId());
+					achievementsInProgress.put(achievement, progress);
+				});
+		}
+		
+		return PlayerAchievements.builder()
+				.player(p)
+				.completedAchievements(completedAchievements)
+				.achievementsInProgress(achievementsInProgress)
+				.build();
+	}
+	
+	public static void savePlayerAchievements(PlayerAchievements pa) {
+		Player p = pa.getPlayer();
+		UUID uid = p.getUniqueId();
+		File pFile = new File(playerDir, uid.toString()+".yml");
+		if(!pFile.exists())
+			try {
+				pFile.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		
+		YamlConfiguration fYml = YamlConfiguration.loadConfiguration(pFile);
+		
+		fYml.set("last-nick", p.getName());
+		fYml.set("completed-achievements", pa.getCompletedAchievements());
+		fYml.set("achievements-in-progress", null);
+		
+		pa.getAchievementsInProgress().entrySet().stream()
+			.forEach(entry -> {
+				String id = entry.getKey().getId();
+				int progress = entry.getValue();
+				fYml.set("achievements-in-progress."+id, progress);
+			});
+		
+		try {
+			fYml.save(pFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }

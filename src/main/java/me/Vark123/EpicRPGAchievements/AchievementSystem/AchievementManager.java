@@ -1,7 +1,7 @@
 package me.Vark123.EpicRPGAchievements.AchievementSystem;
 
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.Material;
 
@@ -12,12 +12,12 @@ public final class AchievementManager {
 
 	private static final AchievementManager inst = new AchievementManager();
 	
-	private final Collection<Achievement> achievements;
-	private final Collection<AchievementCategory> categories;
+	private final List<Achievement> achievements;
+	private final List<AchievementCategory> categories;
 	
 	private AchievementManager() {
-		achievements = new HashSet<>();
-		categories = new HashSet<>();
+		achievements = new ArrayList<>();
+		categories = new ArrayList<>();
 		
 		categories.add(AchievementCategory.builder()
 				.id("KILL")
