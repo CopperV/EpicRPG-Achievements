@@ -19,7 +19,7 @@ public class DragonCoinsReward implements IReward {
 	public void giveReward(Player p) {
 		RpgPlayer rpg = PlayerManager.getInstance().getRpgPlayer(p);
 		rpg.getVault().addDragonCoins(amount);
-		p.sendMessage("§7["+Config.get().getPrefix()+"]§7 §aOtrzymales §4§o"+amount+" §asmoczych monet");
+		p.sendMessage("§7["+Config.get().getPrefix()+"§7] §aOtrzymales §4§o"+amount+" §asmoczych monet");
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package me.Vark123.EpicRPGAchievements.AchievementSystem;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -25,6 +26,7 @@ public class Achievement {
 	private String target;
 	private int amount;
 	private boolean hidden;
+	private String difficulty;
 	
 	public String display;
 	public List<String> lore;
@@ -49,6 +51,10 @@ public class Achievement {
 		
 		item.setItemMeta(im);
 		return item.clone();
+	}
+	
+	public Optional<String> getDifficulty() {
+		return Optional.ofNullable(difficulty);
 	}
 	
 }

@@ -19,7 +19,7 @@ public class StygiaReward implements IReward {
 	public void giveReward(Player p) {
 		RpgPlayer rpg = PlayerManager.getInstance().getRpgPlayer(p);
 		rpg.getVault().addStygia(amount);
-		p.sendMessage("§7["+Config.get().getPrefix()+"]§7 §aOtrzymales §3§o"+amount+" §astygii");
+		p.sendMessage("§7["+Config.get().getPrefix()+"§7] §aOtrzymales §3§o"+amount+" §astygii");
 	}
 
 	@Override

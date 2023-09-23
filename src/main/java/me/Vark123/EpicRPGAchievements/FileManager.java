@@ -22,6 +22,7 @@ import me.Vark123.EpicRPGAchievements.AchievementSystem.AchievementManager;
 import me.Vark123.EpicRPGAchievements.PlayerSystem.PlayerAchievements;
 import me.Vark123.EpicRPGAchievements.RewardSystem.IReward;
 import me.Vark123.EpicRPGAchievements.RewardSystem.Impl.BrylkiReward;
+import me.Vark123.EpicRPGAchievements.RewardSystem.Impl.DragonCoinsReward;
 import me.Vark123.EpicRPGAchievements.RewardSystem.Impl.MoneyReward;
 import me.Vark123.EpicRPGAchievements.RewardSystem.Impl.StygiaReward;
 import me.Vark123.EpicRPGAchievements.RewardSystem.Impl.XpReward;
@@ -80,6 +81,7 @@ public final class FileManager {
 								String target = ChatColor.translateAlternateColorCodes('&', achievementSection.getString("target"));
 								int amount = achievementSection.getInt("amount");
 								boolean hidden = achievementSection.getBoolean("hide");
+								String difficulty = achievementSection.getString("difficulty");
 								String display = ChatColor.translateAlternateColorCodes('&', achievementSection.getString("display"));
 								List<String> lore = achievementSection.getStringList("lore").stream()
 										.map(line -> ChatColor.translateAlternateColorCodes('&', line))
@@ -101,7 +103,7 @@ public final class FileManager {
 													rewards.add(new StygiaReward(rewardsSection.getInt(rewardType+".amount")));
 													break;
 												case "COINS":
-													rewards.add(new MoneyReward(rewardsSection.getInt(rewardType+".amount")));
+													rewards.add(new DragonCoinsReward(rewardsSection.getInt(rewardType+".amount")));
 													break;
 												case "BRYLKI":
 													rewards.add(new BrylkiReward(rewardsSection.getInt(rewardType+".amount")));
@@ -118,13 +120,21 @@ public final class FileManager {
 										.display(display)
 										.lore(lore)
 										.rewards(rewards)
+										.difficulty(difficulty)
 										.category(category)
 										.build();
 								AchievementManager.get().registerAchievement(achievement);
 							});
 					});
 			});
-		AchievementManager.get().getAchievements().sort((av1, av2) -> av1.getId().compareTo(av2.getId()));
+		AchievementManager.get().getAchievements().sort((av1, av2) -> {
+			String id1 = av1.getId();
+			String id2 = av2.getId();
+			if(id1.length() == id2.length())
+				return av1.getId().compareTo(av2.getId());
+			else
+				return Integer.compare(id1.length(), id2.length());
+		});
 		AchievementManager.get().getCategories().sort((cat1, cat2) -> cat1.getId().compareTo(cat2.getId()));
 	}
 	

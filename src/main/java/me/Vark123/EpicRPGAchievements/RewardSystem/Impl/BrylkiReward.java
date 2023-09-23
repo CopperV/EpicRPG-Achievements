@@ -19,7 +19,7 @@ public class BrylkiReward implements IReward {
 	public void giveReward(Player p) {
 		RpgPlayer rpg = PlayerManager.getInstance().getRpgPlayer(p);
 		rpg.getVault().addBrylkiRudy(amount);
-		p.sendMessage("§7["+Config.get().getPrefix()+"]§7 §aOtrzymales §9§o"+amount+" §abrylek rudy");
+		p.sendMessage("§7["+Config.get().getPrefix()+"§7] §aOtrzymales §9§o"+amount+" §abrylek rudy");
 	}
 
 	@Override

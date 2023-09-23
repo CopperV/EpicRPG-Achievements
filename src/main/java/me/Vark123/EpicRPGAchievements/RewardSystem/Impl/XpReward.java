@@ -19,7 +19,7 @@ public class XpReward implements IReward {
 	public void giveReward(Player p) {
 		RpgPlayer rpg = PlayerManager.getInstance().getRpgPlayer(p);
 		rpg.getInfo().addXP(amount);
-		p.sendMessage("§7["+Config.get().getPrefix()+"]§7 §aOtrzymales §6§o"+amount+" §apunktow doswiadczenia");
+		p.sendMessage("§7["+Config.get().getPrefix()+"§7] §aOtrzymales §6§o"+amount+" §apunktow doswiadczenia");
 	}
 
 	@Override

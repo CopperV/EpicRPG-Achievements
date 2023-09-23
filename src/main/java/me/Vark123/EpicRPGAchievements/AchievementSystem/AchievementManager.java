@@ -2,6 +2,7 @@ package me.Vark123.EpicRPGAchievements.AchievementSystem;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.bukkit.Material;
 
@@ -76,6 +77,12 @@ public final class AchievementManager {
 	
 	public void registerCategory(AchievementCategory category) {
 		categories.add(category);
+	}
+	
+	public List<Achievement> getAchievementsByTarget(String target) {
+		return achievements.stream()
+				.filter(achievement -> achievement.getTarget().equals(target))
+				.collect(Collectors.toList());
 	}
 	
 }

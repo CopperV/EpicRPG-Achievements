@@ -1,5 +1,6 @@
 package me.Vark123.EpicRPGAchievements.MenuSystem;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -141,11 +142,17 @@ public final class AchievementMenuManager {
 						int progress = pa.getAchievementsInProgress().get(achievement);
 						double percent = ((double) progress) / ((double) achievement.getAmount()) * 100.;
 						
+						it.setType(Material.YELLOW_TERRACOTTA);
+						
 						ItemMeta im = it.getItemMeta();
 						List<String> lore = im.getLore();
 						lore.add(" ");
 						lore.add("§8§lPOSTEP: §7§o"+String.format("%.2f", percent)+"%");
 						im.setLore(lore);
+						it.setItemMeta(im);
+					} else if(achievement.isHidden()) {
+						ItemMeta im = it.getItemMeta();
+						im.setLore(new LinkedList<>());
 						it.setItemMeta(im);
 					}
 					

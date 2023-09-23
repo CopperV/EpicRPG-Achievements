@@ -19,7 +19,7 @@ public class MoneyReward implements IReward {
 	public void giveReward(Player p) {
 		RpgPlayer rpg = PlayerManager.getInstance().getRpgPlayer(p);
 		rpg.getVault().addMoney(amount);
-		p.sendMessage("§7["+Config.get().getPrefix()+"]§7 §aOtrzymales §e§o"+String.format("%.2f", amount)+"$");
+		p.sendMessage("§7["+Config.get().getPrefix()+"§7] §aOtrzymales §e§o"+String.format("%.2f", amount)+"$");
 	}
 
 	@Override
