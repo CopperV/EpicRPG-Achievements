@@ -1,8 +1,8 @@
 name: EpicRPGAchievements
-version: 2.0.0-ALPHA
+version: 2.0.0
 main: me.Vark123.EpicRPGAchievements.Main
 author: Vark123
-depend: [EpicRecipes,EpicRPG,EpicRPGFishing,EpicRPGGornik,EpicRPGSkillsAndQuests2,EpicParty,MythicMobs,NBTAPI,WorldGuard]
+depend: [EpicRecipes,EpicRPG,EpicRPGFishing,EpicRPGGornik,EpicRPGSkillsAndQuests,EpicParty,MythicMobs,NBTAPI,WorldGuard]
 api-version: 1.18
 
 libraries:
