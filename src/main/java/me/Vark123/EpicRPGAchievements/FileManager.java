@@ -11,6 +11,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+import org.apache.commons.io.FileUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -31,6 +32,7 @@ public final class FileManager {
 
 	private static File achievementDir = new File(Main.getInst().getDataFolder(), "achievements");
 	private static File playerDir = new File(Main.getInst().getDataFolder(), "players");
+	private static File oldDir = new File(Main.getInst().getDataFolder(), "old");
 	
 	@Getter
 	private static File config = new File(Main.getInst().getDataFolder(), "config.yml");
@@ -46,6 +48,9 @@ public final class FileManager {
 		
 		if(!playerDir.exists())
 			playerDir.mkdir();
+		
+		if(oldDir.exists())
+			convert();
 		
 		loadAchievements();
 		
@@ -208,6 +213,57 @@ public final class FileManager {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private static void convert() {
+		Arrays.asList(oldDir.listFiles()).stream()
+			.filter(file -> file.isFile())
+			.filter(file -> file.getName().endsWith(".yml"))
+			.map(YamlConfiguration::loadConfiguration)
+			.forEach(fYml -> {
+				String nick = fYml.getString("player");
+				String uid = fYml.getString("uuid");
+				File file = new File(playerDir, uid+".yml");
+				if(file.exists()) {
+					File toCompare1 = new File(oldDir, nick.toLowerCase()+".yml");
+					YamlConfiguration fYml2 = YamlConfiguration.loadConfiguration(file);
+					String nick2 = fYml2.getString("last-nick");
+					File toCompare2 = new File(oldDir, nick2.toLowerCase()+".yml");
+					if(toCompare2.exists()
+							&& FileUtils.isFileNewer(toCompare1, toCompare2))
+						return;
+					if(!toCompare2.exists())
+						return;
+				} else {
+					try {
+						file.createNewFile();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+				
+				YamlConfiguration fYml2 = YamlConfiguration.loadConfiguration(file);
+				fYml2.set("last-nick", nick);
+				fYml2.set("completed-achievements", fYml.getStringList("completed"));
+				fYml2.set("achievements-in-progress", null);
+				
+				ConfigurationSection progressSection = fYml.getConfigurationSection("progress");
+				if(progressSection != null)
+					progressSection.getKeys(false).stream()
+						.map(progressSection::getConfigurationSection)
+						.forEach(section -> {
+							String id = section.getString("id");
+							int progress = section.getInt("progress");
+							fYml2.set("achievements-in-progress."+id, progress);
+						});
+				
+				try {
+					fYml2.save(file);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			});
+		oldDir.renameTo(new File(Main.getInst().getDataFolder(), "archive"));
 	}
 	
 }
