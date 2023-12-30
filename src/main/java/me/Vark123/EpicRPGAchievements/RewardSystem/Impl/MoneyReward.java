@@ -4,9 +4,9 @@ import org.bukkit.entity.Player;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import me.Vark123.EpicRPG.Core.MoneySystem;
 import me.Vark123.EpicRPG.Players.PlayerManager;
 import me.Vark123.EpicRPG.Players.RpgPlayer;
-import me.Vark123.EpicRPGAchievements.Config;
 import me.Vark123.EpicRPGAchievements.RewardSystem.IReward;
 
 @Getter
@@ -18,8 +18,9 @@ public class MoneyReward implements IReward {
 	@Override
 	public void giveReward(Player p) {
 		RpgPlayer rpg = PlayerManager.getInstance().getRpgPlayer(p);
-		rpg.getVault().addMoney(amount);
-		p.sendMessage("§7["+Config.get().getPrefix()+"§7] §aOtrzymales §e§o"+String.format("%.2f", amount)+"$");
+		MoneySystem.getInstance().addMoney(rpg, amount, "achievement");
+//		rpg.getVault().addMoney(amount);
+//		p.sendMessage("§7["+Config.get().getPrefix()+"§7] §aOtrzymales §e§o"+String.format("%.2f", amount)+"$");
 	}
 
 	@Override

@@ -1,22 +1,24 @@
 package me.Vark123.EpicRPGAchievements.AchievementSystem.Listeners;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDeathEvent;
 
+import io.lumine.mythic.bukkit.events.MythicMobDeathEvent;
 import me.Vark123.EpicRPGAchievements.AchievementSystem.AchievementManager;
 import me.Vark123.EpicRPGAchievements.PlayerSystem.PlayerAchievementsManager;
 
 public class EntityKillListener implements Listener {
 
 	@EventHandler
-	public void onKill(EntityDeathEvent e) {
-		LivingEntity victim = e.getEntity();
-		Player p = victim.getKiller();
-		if(p == null)
+	public void onKill(MythicMobDeathEvent e) {
+		Entity victim = e.getEntity();
+		LivingEntity killer = e.getKiller();
+		if(killer == null || !(killer instanceof Player))
 			return;
+		Player p = (Player) killer;
 		
 		String result = victim.getName();
 		PlayerAchievementsManager.get().getPlayerAchievements(p)
