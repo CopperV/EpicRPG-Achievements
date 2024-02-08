@@ -11,30 +11,37 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.entity.EntityDeathEvent;
 
+import io.lumine.mythic.bukkit.events.MythicMobDeathEvent;
 import io.lumine.mythic.bukkit.events.MythicMobDespawnEvent;
-import me.Vark123.EpicRPG.FightSystem.Modifiers.DamageModifier;
+import me.Vark123.EpicRPG.FightSystem.Events.EpicEffectEvent;
 import me.Vark123.EpicRPGAchievements.AchievementSystem.AchievementManager;
 import me.Vark123.EpicRPGAchievements.PlayerSystem.PlayerAchievementsManager;
 import me.Vark123.EpicRPGAchievements.Tools.Pair;
 
-public class DungeonKillListener implements Listener, DamageModifier {
+public class DungeonKillListener implements Listener {
 
 	private static Map<Entity, List<Pair<Player, Double>>> damageCounters = new ConcurrentHashMap<>();
 	
 	@EventHandler
-	public void onDeath(EntityDeathEvent e) {
-		LivingEntity victim = e.getEntity();
-		if(victim instanceof Player)
+	public void onDeath(MythicMobDeathEvent e) {
+		Entity _victim = e.getEntity();
+		if(_victim instanceof Player)
 			return;
-		if(!damageCounters.containsKey(victim))
+		if(!(_victim instanceof LivingEntity))
+			return;
+		if(!damageCounters.containsKey(_victim))
+			return;
+		
+		LivingEntity victim = (LivingEntity) _victim;
+		LivingEntity killer = e.getKiller();
+		if(killer == null || !(killer instanceof Player))
 			return;
 		
 		List<Player> players = new LinkedList<>();
-		Player p = victim.getKiller();
+		Player p = (Player) killer;
 		if(p != null)
 			players.add(p);
 		
@@ -80,17 +87,22 @@ public class DungeonKillListener implements Listener, DamageModifier {
 		damageCounters.remove(entity);
 	}
 	
-	@Override
-	public double modifyDamage(Entity damager, Entity victim, double damage, DamageCause cause) {
-		if(victim instanceof Player)
-			return damage;
-		if(cause.equals(DamageCause.PROJECTILE))
-			damager = (Entity) ((Projectile) damager).getShooter();
-		if(!(damager instanceof Player))
-			return damage;
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onDamage(EpicEffectEvent e) {
+		if(e.isCancelled())
+			return;
 		
-		List<Pair<Player, Double>> players = damageCounters.getOrDefault(victim, new LinkedList<>());
+		Entity damager = e.getDamager();
+		if(damager instanceof Projectile)
+			damager = (Entity) ((Projectile) damager).getShooter();
+		
+		if(!(damager instanceof Player))
+			return;
+		
+		double damage = e.getFinalDamage();
+		Entity victim = e.getVictim();
 		Player p = (Player) damager;
+		List<Pair<Player, Double>> players = damageCounters.getOrDefault(victim, new LinkedList<>());
 		
 		players.stream()
 			.filter(pair -> pair.getKey().equals(p))
@@ -103,7 +115,6 @@ public class DungeonKillListener implements Listener, DamageModifier {
 			});
 		
 		damageCounters.put(victim, players);
-		return damage;
 	}
 
 }

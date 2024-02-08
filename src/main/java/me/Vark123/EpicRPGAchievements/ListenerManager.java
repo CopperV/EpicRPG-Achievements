@@ -1,9 +1,7 @@
 package me.Vark123.EpicRPGAchievements;
 
 import org.bukkit.Bukkit;
-import org.bukkit.event.EventPriority;
 
-import me.Vark123.EpicRPG.FightSystem.Modifiers.DamageModifierManager;
 import me.Vark123.EpicRPGAchievements.AchievementSystem.Listeners.CraftingListener;
 import me.Vark123.EpicRPGAchievements.AchievementSystem.Listeners.DiscoverListener;
 import me.Vark123.EpicRPGAchievements.AchievementSystem.Listeners.DungeonKillListener;
@@ -35,8 +33,6 @@ public final class ListenerManager {
 		Bukkit.getPluginManager().registerEvents(new EntityKillListener(), inst);
 		Bukkit.getPluginManager().registerEvents(new DungeonPassListener(), inst);
 		Bukkit.getPluginManager().registerEvents(new DungeonKillListener(), inst);
-
-		DamageModifierManager.getInstance().registerModifier(new DungeonKillListener(), EventPriority.MONITOR);
 	}
 	
 }

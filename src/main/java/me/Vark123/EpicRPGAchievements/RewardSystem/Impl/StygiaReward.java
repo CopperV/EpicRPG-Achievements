@@ -4,9 +4,9 @@ import org.bukkit.entity.Player;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import me.Vark123.EpicRPG.Core.StygiaSystem;
 import me.Vark123.EpicRPG.Players.PlayerManager;
 import me.Vark123.EpicRPG.Players.RpgPlayer;
-import me.Vark123.EpicRPGAchievements.Config;
 import me.Vark123.EpicRPGAchievements.RewardSystem.IReward;
 
 @Getter
@@ -18,8 +18,9 @@ public class StygiaReward implements IReward {
 	@Override
 	public void giveReward(Player p) {
 		RpgPlayer rpg = PlayerManager.getInstance().getRpgPlayer(p);
-		rpg.getVault().addStygia(amount);
-		p.sendMessage("§7["+Config.get().getPrefix()+"§7] §aOtrzymales §3§o"+amount+" §astygii");
+		StygiaSystem.getInstance().addStygia(rpg, amount, "achievement");
+//		rpg.getVault().addStygia(amount);
+//		p.sendMessage("§7["+Config.get().getPrefix()+"§7] §aOtrzymales §3§o"+amount+" §astygii");
 	}
 
 	@Override
