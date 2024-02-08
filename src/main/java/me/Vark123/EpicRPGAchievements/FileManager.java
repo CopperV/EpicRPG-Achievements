@@ -25,6 +25,8 @@ import me.Vark123.EpicRPGAchievements.RewardSystem.IReward;
 import me.Vark123.EpicRPGAchievements.RewardSystem.Impl.BrylkiReward;
 import me.Vark123.EpicRPGAchievements.RewardSystem.Impl.DragonCoinsReward;
 import me.Vark123.EpicRPGAchievements.RewardSystem.Impl.MoneyReward;
+import me.Vark123.EpicRPGAchievements.RewardSystem.Impl.MythicItemReward;
+import me.Vark123.EpicRPGAchievements.RewardSystem.Impl.PermissionReward;
 import me.Vark123.EpicRPGAchievements.RewardSystem.Impl.StygiaReward;
 import me.Vark123.EpicRPGAchievements.RewardSystem.Impl.XpReward;
 
@@ -112,6 +114,14 @@ public final class FileManager {
 													break;
 												case "BRYLKI":
 													rewards.add(new BrylkiReward(rewardsSection.getInt(rewardType+".amount")));
+													break;
+												case "PERMISSION":
+													rewards.add(new PermissionReward(rewardsSection.getString(rewardType+".perm"),
+															rewardsSection.getInt(rewardType+".amount")));
+													break;
+												case "ITEM":
+													rewards.add(new MythicItemReward(rewardsSection.getString(rewardType+".item"),
+															rewardsSection.getInt(rewardType+".amount")));
 													break;
 											}
 										});
