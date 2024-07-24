@@ -16,7 +16,7 @@ public class PermissionReward implements IReward {
 	
 	@Override
 	public void giveReward(Player p) {
-		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user "+p.getName()+" permission settemp "+perm+" true "+amount+"h accumulate");
+		Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user "+p.getName()+" permission settemp "+perm+" true "+amount+"h accumulate epicrpg");
 		p.sendMessage("§aOtrzymano uprawnienia §7§o"+perm+" §ana §7§o"+amount+" §agodzin");
 	}
 
