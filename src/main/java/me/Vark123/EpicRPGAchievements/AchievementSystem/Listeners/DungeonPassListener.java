@@ -11,7 +11,9 @@ import org.bukkit.event.Listener;
 import me.Vark123.EpicRPGAchievements.AchievementSystem.AchievementManager;
 import me.Vark123.EpicRPGAchievements.PlayerSystem.PlayerAchievementsManager;
 import me.Vark123.EpicRPGSkillsAndQuests.PlayerSystem.PlayerQuestImpl.PlayerDungeonQuest;
+import me.Vark123.EpicRPGSkillsAndQuests.PlayerSystem.PlayerQuestImpl.PlayerRaidQuest;
 import me.Vark123.EpicRPGSkillsAndQuests.QuestSystem.DungeonSystem.Events.DungeonEndEvent;
+import me.Vark123.EpicRPGSkillsAndQuests.QuestSystem.RaidSystem.Events.RaidEndEvent;
 
 public class DungeonPassListener implements Listener {
 
@@ -36,6 +38,45 @@ public class DungeonPassListener implements Listener {
 						.filter(achievement -> achievement.getDifficulty().isPresent())
 						.filter(achievement -> {
 							String world = dungeon.getWorld().toLowerCase();
+							switch(achievement.getDifficulty().get().toLowerCase()) {
+								case "normal":
+									return !(world.contains("heroic") || world.contains("mythic"));
+								case "heroic":
+									return world.contains("heroic");
+								case "mythic":
+									return world.contains("mythic");
+								default:
+									return false;
+							}
+						})
+						.filter(achievement -> achievement.getCategory().getId().equals("DUNGEON_PASS"))
+						.filter(achievement -> !pa.getCompletedAchievements().contains(achievement.getId()))
+						.forEach(achievement -> pa.updateAchievement(achievement, 1));
+				});
+		});
+	}
+
+	@EventHandler
+	public void onDungeonPass(RaidEndEvent e) {
+		PlayerRaidQuest raid = e.getDungeon();
+		List<Player> players = new LinkedList<>();
+		if(raid.getParty().isEmpty())
+			players.add(raid.getPartyPlayer().getPlayer());
+		else
+			players = raid.getParty().get().getMembers()
+				.stream()
+				.map(member -> member.getPlayer())
+				.collect(Collectors.toList());
+		
+		String result = raid.getQuest().getDisplay();
+		players.stream().forEach(p -> {
+			PlayerAchievementsManager.get().getPlayerAchievements(p)
+				.ifPresent(pa -> {
+					AchievementManager.get().getAchievementsByTarget(result)
+						.stream()
+						.filter(achievement -> achievement.getDifficulty().isPresent())
+						.filter(achievement -> {
+							String world = raid.getWorld().toLowerCase();
 							switch(achievement.getDifficulty().get().toLowerCase()) {
 								case "normal":
 									return !(world.contains("heroic") || world.contains("mythic"));

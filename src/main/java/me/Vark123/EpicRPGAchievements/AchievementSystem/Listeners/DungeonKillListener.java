@@ -44,6 +44,10 @@ public class DungeonKillListener implements Listener {
 		Player p = (Player) killer;
 		if(p != null)
 			players.add(p);
+
+		String world = victim.getWorld().getName().toLowerCase();
+		if(!(world.startsWith("dungeon") || world.startsWith("raid")))
+			return;
 		
 		double maxHp = victim.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
 		double percent = maxHp * 0.05;
@@ -61,7 +65,6 @@ public class DungeonKillListener implements Listener {
 						.stream()
 						.filter(achievement -> achievement.getDifficulty().isPresent())
 						.filter(achievement -> {
-							String world = victim.getWorld().getName().toLowerCase();
 							switch(achievement.getDifficulty().get().toLowerCase()) {
 								case "normal":
 									return !(world.contains("heroic") || world.contains("mythic"));
@@ -103,6 +106,10 @@ public class DungeonKillListener implements Listener {
 		Entity victim = e.getVictim();
 		Player p = (Player) damager;
 		List<Pair<Player, Double>> players = damageCounters.getOrDefault(victim, new LinkedList<>());
+		
+		String world = victim.getWorld().getName();
+		if(!(world.startsWith("dungeon") || world.startsWith("raid")))
+			return;
 		
 		players.stream()
 			.filter(pair -> pair.getKey().equals(p))
