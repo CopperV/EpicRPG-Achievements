@@ -10,10 +10,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import io.github.rysefoxx.inventory.plugin.content.IntelligentItem;
-import io.github.rysefoxx.inventory.plugin.content.InventoryContents;
-import io.github.rysefoxx.inventory.plugin.content.InventoryProvider;
-import io.github.rysefoxx.inventory.plugin.pagination.RyseInventory;
+import me.Vark123.EpicInventory.Content.IntelligentItem;
+import me.Vark123.EpicInventory.Content.InventoryContents;
+import me.Vark123.EpicInventory.Content.InventoryProvider;
+import me.Vark123.EpicInventory.Pagination.EpicInventory;
 import me.Vark123.EpicRPGAchievements.Main;
 import me.Vark123.EpicRPGAchievements.AchievementSystem.Achievement;
 import me.Vark123.EpicRPGAchievements.AchievementSystem.AchievementCategory;
@@ -76,7 +76,7 @@ public final class AchievementMenuManager {
 	}
 	
 	public void openCategoryMenu(Player p) {
-		RyseInventory.builder()
+		EpicInventory.builder()
 			.title("§2§lTWOJE OSIAGNIECIA")
 			.rows(1)
 			.disableUpdateTask()
@@ -86,7 +86,7 @@ public final class AchievementMenuManager {
 	}
 	
 	public void openAchievementsMenu(Player p, AchievementCategory category, int page) {
-		RyseInventory.builder()
+		EpicInventory.builder()
 			.title("§2§lTWOJE OSIAGNIECIA §7[§r"+category.getDisplay()+"§7]")
 			.rows(6)
 			.disableUpdateTask()

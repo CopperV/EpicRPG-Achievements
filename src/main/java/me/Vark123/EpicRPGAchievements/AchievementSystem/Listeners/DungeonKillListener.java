@@ -16,7 +16,7 @@ import org.bukkit.event.Listener;
 
 import io.lumine.mythic.bukkit.events.MythicMobDeathEvent;
 import io.lumine.mythic.bukkit.events.MythicMobDespawnEvent;
-import me.Vark123.EpicRPG.FightSystem.Events.EpicEffectEvent;
+import me.Vark123.EpicRPG.OldFightSystem.Events.EpicEffectEvent;
 import me.Vark123.EpicRPGAchievements.AchievementSystem.AchievementManager;
 import me.Vark123.EpicRPGAchievements.PlayerSystem.PlayerAchievementsManager;
 import me.Vark123.EpicRPGAchievements.Tools.Pair;
